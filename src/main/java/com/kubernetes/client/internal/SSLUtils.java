@@ -25,11 +25,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
 import static com.kubernetes.client.internal.CertUtils.createKeyStore;
 import static com.kubernetes.client.internal.CertUtils.createTrustStore;
 
@@ -40,7 +35,7 @@ public final class SSLUtils {
     private SSLUtils() {
         //Utility
     }
-    
+
     public static SSLContext sslContext(Config config) throws CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, IOException, InvalidKeySpecException, KeyManagementException {
         return sslContext(keyManagers(config), trustManagers(config));
     }

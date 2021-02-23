@@ -1,7 +1,6 @@
 package com.k8s.test;
 
-import com.kubernetes.api.model.Config;
-import com.kubernetes.client.internal.KubeConfigUtils;
+import com.kubernetes.client.Config;
 import com.kubernetes.client.util.IOHelpers;
 
 import org.junit.Test;
@@ -12,16 +11,15 @@ import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class KubeConfigUtilTest {
+public class ConfigTest {
 
     @Test
-    public void test1() throws IOException {
+    public void configLoadKubeConfig() throws IOException {
         InputStream is = getClass().getResourceAsStream("/kube_config.yaml");
         String content = IOHelpers.readFully(is);
 
-        Config config = KubeConfigUtils.parseConfigFromString(content);
+        Config config = Config.fromKubeconfig(content);
 
         log.info("{}", config);
     }
-
 }

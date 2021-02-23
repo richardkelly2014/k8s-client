@@ -34,11 +34,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import lombok.ToString;
 import okhttp3.TlsVersion;
 
 import static okhttp3.TlsVersion.TLS_1_2;
 
-
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
@@ -197,7 +198,7 @@ public class Config {
     private File file;
 
     public Config() {
-        this(!Utils.getSystemPropertyOrEnvVar(KUBERNETES_DISABLE_AUTO_CONFIG_SYSTEM_PROPERTY, false));
+        //this(!Utils.getSystemPropertyOrEnvVar(KUBERNETES_DISABLE_AUTO_CONFIG_SYSTEM_PROPERTY, false));
     }
 
     private Config(Boolean autoConfigure) {
