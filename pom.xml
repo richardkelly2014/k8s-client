@@ -22,6 +22,8 @@
         <jackson.version>2.11.2</jackson.version>
         <jackson.bundle.version>${jackson.version}</jackson.bundle.version>
 
+        <snakeyaml.version>1.26</snakeyaml.version>
+        <bouncycastle.version>1.68</bouncycastle.version>
 
         <lombok.version>1.18.0</lombok.version>
         <guava.version>25.1-jre</guava.version>
@@ -156,6 +158,19 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>${okhttp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-ext-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
