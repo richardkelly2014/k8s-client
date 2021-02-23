@@ -4,6 +4,7 @@ import com.kubernetes.api.model.Config;
 import com.kubernetes.client.internal.KubeConfigUtils;
 import com.kubernetes.client.util.IOHelpers;
 
+import com.kubernetes.client.util.Serialization;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class KubeConfigUtilTest {
         InputStream is = getClass().getResourceAsStream("/kube_config.yaml");
         String content = IOHelpers.readFully(is);
 
-        Config config = KubeConfigUtils.parseConfigFromString(content);
+        Config config = Serialization.unmarshal(content, Config.class);
+        // Config config = KubeConfigUtils.parseConfigFromString(content);
 
         log.info("{}", config);
     }
