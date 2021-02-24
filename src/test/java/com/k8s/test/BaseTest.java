@@ -63,4 +63,12 @@ public class BaseTest {
 
         log.info("{}", Serialization.asYaml(map));
     }
+
+    @Test
+    public void test5() {
+        String javaVersion = System.getProperty("java.version", "");
+        log.info("{}", javaVersion);
+
+        log.info("{}", javaVersion.startsWith("1.8"));
+    }
 }

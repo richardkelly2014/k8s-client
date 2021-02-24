@@ -37,6 +37,9 @@ import java.util.stream.Collectors;
 
 import okio.ByteString;
 
+/**
+ * 证书
+ */
 public class CertUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(CertUtils.class);
@@ -65,6 +68,20 @@ public class CertUtils {
         return null;
     }
 
+    /**
+     * keystore 证书
+     * 更具 config caCertData/caCertFile
+     *
+     * @param caCertData
+     * @param caCertFile
+     * @param trustStoreFile
+     * @param trustStorePassphrase
+     * @return
+     * @throws IOException
+     * @throws CertificateException
+     * @throws KeyStoreException
+     * @throws NoSuchAlgorithmException
+     */
     public static KeyStore createTrustStore(String caCertData,
                                             String caCertFile,
                                             String trustStoreFile,
@@ -81,6 +98,7 @@ public class CertUtils {
         return trustStorePassphrase.toCharArray();
     }
 
+    //keyStore
     public static KeyStore createTrustStore(InputStream pemInputStream, String trustStoreFile, char[] trustStorePassphrase) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException {
         KeyStore trustStore = KeyStore.getInstance("JKS");
 
@@ -99,31 +117,63 @@ public class CertUtils {
         return trustStore;
     }
 
-    public static KeyStore createKeyStore(InputStream certInputStream, InputStream keyInputStream, String clientKeyAlgo, char[] clientKeyPassphrase, String keyStoreFile, char[] keyStorePassphrase) throws IOException, CertificateException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException {
+
+    /**
+     * keyStore
+     *
+     * @param clientCertData
+     * @param clientCertFile
+     * @param clientKeyData
+     * @param clientKeyFile
+     * @param clientKeyAlgo
+     * @param clientKeyPassphrase
+     * @param keyStoreFile
+     * @param keyStorePassphrase
+     * @return
+     * @throws IOException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     * @throws KeyStoreException
+     */
+    public static KeyStore createKeyStore(String clientCertData, String clientCertFile, String clientKeyData,
+                                          String clientKeyFile, String clientKeyAlgo, String clientKeyPassphrase, String keyStoreFile,
+                                          String keyStorePassphrase)
+            throws IOException, CertificateException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException {
+        try (InputStream certInputStream = getInputStreamFromDataOrFile(clientCertData, clientCertFile);
+             InputStream keyInputStream = getInputStreamFromDataOrFile(clientKeyData, clientKeyFile)) {
+            return createKeyStore(certInputStream, keyInputStream, clientKeyAlgo, clientKeyPassphrase.toCharArray(),
+                    keyStoreFile, getKeyStorePassphrase(keyStorePassphrase));
+        }
+    }
+
+    public static KeyStore createKeyStore(InputStream certInputStream, InputStream keyInputStream,
+                                          String clientKeyAlgo, char[] clientKeyPassphrase,
+                                          String keyStoreFile, char[] keyStorePassphrase) throws IOException, CertificateException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException {
         CertificateFactory certFactory = CertificateFactory.getInstance("X509");
         Collection<? extends Certificate> certificates = certFactory.generateCertificates(certInputStream);
         PrivateKey privateKey = loadKey(keyInputStream, clientKeyAlgo);
 
         KeyStore keyStore = KeyStore.getInstance("JKS");
-        if (Utils.isNotNullOrEmpty(keyStoreFile)){
+        if (Utils.isNotNullOrEmpty(keyStoreFile)) {
             keyStore.load(new FileInputStream(keyStoreFile), keyStorePassphrase);
         } else {
             loadDefaultKeyStoreFile(keyStore, keyStorePassphrase);
         }
 
-        String alias = certificates.stream().map(cert->((X509Certificate)cert).getIssuerX500Principal().getName()).collect(Collectors.joining("_"));
+        String alias = certificates.stream().map(cert -> ((X509Certificate) cert).getIssuerX500Principal().getName()).collect(Collectors.joining("_"));
         keyStore.setKeyEntry(alias, privateKey, clientKeyPassphrase, certificates.toArray(new Certificate[0]));
 
         return keyStore;
     }
 
     private static PrivateKey loadKey(InputStream keyInputStream, String clientKeyAlgo) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        if(clientKeyAlgo == null) {
+        if (clientKeyAlgo == null) {
             clientKeyAlgo = "RSA"; // by default let's assume it's RSA
         }
-        if(clientKeyAlgo.equals("EC")) {
+        if (clientKeyAlgo.equals("EC")) {
             return handleECKey(keyInputStream);
-        } else if(clientKeyAlgo.equals("RSA")) {
+        } else if (clientKeyAlgo.equals("RSA")) {
             return handleOtherKeys(keyInputStream, clientKeyAlgo);
         }
 
@@ -169,7 +219,15 @@ public class CertUtils {
         }
     }
 
-
+    /**
+     * load 系统默认 storeFile
+     *
+     * @param keyStore
+     * @param trustStorePassphrase
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
     private static void loadDefaultTrustStoreFile(KeyStore keyStore, char[] trustStorePassphrase)
             throws CertificateException, NoSuchAlgorithmException, IOException {
 
@@ -180,6 +238,11 @@ public class CertUtils {
         }
     }
 
+    /**
+     * 获取当前系统 默认 StoreFile
+     *
+     * @return
+     */
     private static File getDefaultTrustStoreFile() {
         String securityDirectory =
                 System.getProperty("java.home") + File.separator + "lib" + File.separator + "security" + File.separator;
@@ -211,6 +274,17 @@ public class CertUtils {
         keyStore.load(null);
     }
 
+    /**
+     * keyStore 加载默认 storeFile 和 passphrase
+     *
+     * @param keyStore
+     * @param fileToLoad
+     * @param passphrase
+     * @return
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
     private static boolean loadDefaultStoreFile(KeyStore keyStore, File fileToLoad, char[] passphrase)
             throws CertificateException, NoSuchAlgorithmException, IOException {
 
@@ -229,16 +303,6 @@ public class CertUtils {
         return false;
     }
 
-
-    public static KeyStore createKeyStore(String clientCertData, String clientCertFile, String clientKeyData,
-                                          String clientKeyFile, String clientKeyAlgo, String clientKeyPassphrase, String keyStoreFile,
-                                          String keyStorePassphrase)
-            throws IOException, CertificateException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException {
-        try (InputStream certInputStream = getInputStreamFromDataOrFile(clientCertData, clientCertFile); InputStream keyInputStream = getInputStreamFromDataOrFile(clientKeyData, clientKeyFile)) {
-            return createKeyStore(certInputStream, keyInputStream, clientKeyAlgo, clientKeyPassphrase.toCharArray(),
-                    keyStoreFile, getKeyStorePassphrase(keyStorePassphrase));
-        }
-    }
 
     private static char[] getKeyStorePassphrase(String keyStorePassphrase) {
         if (Utils.isNullOrEmpty(keyStorePassphrase)) {

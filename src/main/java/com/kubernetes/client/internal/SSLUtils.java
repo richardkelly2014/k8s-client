@@ -46,11 +46,24 @@ public final class SSLUtils {
         return sslContext;
     }
 
+    /**
+     * 根据 config caCertFile/caCertData 生成 trustManager
+     *
+     * @param config
+     * @return
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws KeyStoreException
+     * @throws IOException
+     */
     public static TrustManager[] trustManagers(Config config) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        return trustManagers(config.getCaCertData(), config.getCaCertFile(), config.isTrustCerts(), config.getTrustStoreFile(), config.getTrustStorePassphrase());
+        return trustManagers(config.getCaCertData(), config.getCaCertFile(),
+                config.isTrustCerts(), config.getTrustStoreFile(), config.getTrustStorePassphrase());
     }
 
-    public static TrustManager[] trustManagers(String certData, String certFile, boolean isTrustCerts, String trustStoreFile, String trustStorePassphrase) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
+    public static TrustManager[] trustManagers(String certData, String certFile,
+                                               boolean isTrustCerts, String trustStoreFile,
+                                               String trustStorePassphrase) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         KeyStore trustStore = null;
         if (isTrustCerts) {
@@ -74,11 +87,29 @@ public final class SSLUtils {
         return tmf.getTrustManagers();
     }
 
+    /**
+     * 根据config clientCertData/clientCertData clientKeyData/clientKeyFile
+     *
+     * @param config
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws UnrecoverableKeyException
+     * @throws KeyStoreException
+     * @throws CertificateException
+     * @throws InvalidKeySpecException
+     * @throws IOException
+     */
     public static KeyManager[] keyManagers(Config config) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, CertificateException, InvalidKeySpecException, IOException {
-        return keyManagers(config.getClientCertData(), config.getClientCertFile(), config.getClientKeyData(), config.getClientKeyFile(), config.getClientKeyAlgo(), config.getClientKeyPassphrase(), config.getKeyStoreFile(), config.getKeyStorePassphrase());
+        return keyManagers(config.getClientCertData(), config.getClientCertFile(),
+                config.getClientKeyData(), config.getClientKeyFile(),
+                config.getClientKeyAlgo(), config.getClientKeyPassphrase(),
+                config.getKeyStoreFile(), config.getKeyStorePassphrase());
     }
 
-    public static KeyManager[] keyManagers(String certData, String certFile, String keyData, String keyFile, String algo, String passphrase, String keyStoreFile, String keyStorePassphrase) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, CertificateException, InvalidKeySpecException, IOException {
+    public static KeyManager[] keyManagers(String certData, String certFile,
+                                           String keyData, String keyFile,
+                                           String algo, String passphrase,
+                                           String keyStoreFile, String keyStorePassphrase) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, CertificateException, InvalidKeySpecException, IOException {
         KeyManager[] keyManagers = null;
         if ((Utils.isNotNullOrEmpty(certData) || Utils.isNotNullOrEmpty(certFile)) && (Utils.isNotNullOrEmpty(keyData) || Utils.isNotNullOrEmpty(keyFile))) {
             KeyStore keyStore = createKeyStore(certData, certFile, keyData, keyFile, algo, passphrase, keyStoreFile, keyStorePassphrase);
