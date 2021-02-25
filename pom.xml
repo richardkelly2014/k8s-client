@@ -25,6 +25,8 @@
         <snakeyaml.version>1.26</snakeyaml.version>
         <bouncycastle.version>1.68</bouncycastle.version>
 
+        <zjsonpatch.version>0.3.0</zjsonpatch.version>
+
         <lombok.version>1.18.0</lombok.version>
         <guava.version>25.1-jre</guava.version>
 
@@ -158,6 +160,12 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>${okhttp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>zjsonpatch</artifactId>
+            <version>${zjsonpatch.version}</version>
         </dependency>
 
         <dependency>
