@@ -1,4 +1,6 @@
 package com.kubernetes.client;
 
-public interface NamespacedKubernetesClient extends GenericKubernetesClient<NamespacedKubernetesClient>{
+
+public interface NamespacedKubernetesClient extends GenericKubernetesClient<NamespacedKubernetesClient> {
+
 }

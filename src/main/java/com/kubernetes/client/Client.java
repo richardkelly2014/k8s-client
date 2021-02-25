@@ -28,7 +28,7 @@ public interface Client extends ConfigAware, Closeable {
     String getNamespace();
 
     RootPaths rootPaths();
-
+    
     boolean supportsApiPath(String path);
 
     void close();

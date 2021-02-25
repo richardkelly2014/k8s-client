@@ -3,9 +3,9 @@ package com.kubernetes.client;
 import okhttp3.OkHttpClient;
 
 /**
- * httpclient 配置
- * (OkHttpClient)
+ * http client
  */
 public interface HttpClientAware {
+
     OkHttpClient getHttpClient();
 }
