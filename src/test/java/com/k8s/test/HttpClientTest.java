@@ -26,7 +26,7 @@ public class HttpClientTest {
 
         OkHttpClient httpClient = HttpClientUtils.createHttpClient(config);
 
-        String url = config.getMasterUrl() + "/api/v1";
+        String url = config.getMasterUrl();
 
         Request request = new Request.Builder().get().url(url).build();
 

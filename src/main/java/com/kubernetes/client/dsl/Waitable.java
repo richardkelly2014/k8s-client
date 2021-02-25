@@ -3,6 +3,11 @@ package com.kubernetes.client.dsl;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+/**
+ *  等待操作
+ * @param <T>
+ * @param <P>
+ */
 public interface Waitable<T, P> {
 
     long DEFAULT_INITIAL_BACKOFF_MILLIS = 5L;

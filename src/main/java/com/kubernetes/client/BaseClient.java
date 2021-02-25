@@ -4,7 +4,10 @@ import com.kubernetes.client.util.HttpClientUtils;
 import com.kubernetes.client.util.Utils;
 
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
 
+import okhttp3.ConnectionPool;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 
 /**
@@ -42,5 +45,67 @@ public abstract class BaseClient implements Client, HttpClientAware {
         } catch (Exception e) {
             throw KubernetesClientException.launderThrowable(e);
         }
+    }
+
+    @Override
+    public void close() {
+        ConnectionPool connectionPool = httpClient.connectionPool();
+        Dispatcher dispatcher = httpClient.dispatcher();
+        ExecutorService executorService = httpClient.dispatcher() != null ? httpClient.dispatcher().executorService() : null;
+
+        if (dispatcher != null) {
+            dispatcher.cancelAll();
+        }
+
+        if (connectionPool != null) {
+            connectionPool.evictAll();
+        }
+
+        Utils.shutdownExecutorService(executorService);
+    }
+
+    @Override
+    public URL getMasterUrl() {
+        return masterUrl;
+    }
+
+    @Override
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
+
+
+    @Override
+    public Config getConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public OkHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    @Override
+    public <C> Boolean isAdaptable(Class<C> type) {
+        ExtensionAdapter<C> adapter = Adapters.get(type);
+        if (adapter != null) {
+            return adapter.isAdaptable(this);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public <C> C adapt(Class<C> type) {
+        ExtensionAdapter<C> adapter = Adapters.get(type);
+        if (adapter != null) {
+            return adapter.adapt(this);
+        }
+        throw new IllegalStateException("No adapter available for type:" + type);
     }
 }
