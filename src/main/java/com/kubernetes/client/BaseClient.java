@@ -1,9 +1,11 @@
 package com.kubernetes.client;
 
+import com.kubernetes.api.model.RootPaths;
 import com.kubernetes.client.util.HttpClientUtils;
 import com.kubernetes.client.util.Utils;
 
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import okhttp3.ConnectionPool;
@@ -107,5 +109,28 @@ public abstract class BaseClient implements Client, HttpClientAware {
             return adapter.adapt(this);
         }
         throw new IllegalStateException("No adapter available for type:" + type);
+    }
+
+    @Override
+    public RootPaths rootPaths() {
+//        return new BaseOperation(new OperationContext().withOkhttpClient(httpClient).withConfig(configuration)) {
+//        }.getRootPaths();
+        return null;
+    }
+
+    @Override
+    public boolean supportsApiPath(String apiPath) {
+        RootPaths rootPaths = rootPaths();
+        if (rootPaths != null) {
+            List<String> paths = rootPaths.getPaths();
+            if (paths != null) {
+                for (String path : paths) {
+                    if (path.equals(apiPath)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

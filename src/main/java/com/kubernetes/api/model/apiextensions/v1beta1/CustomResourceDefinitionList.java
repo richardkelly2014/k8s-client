@@ -1,5 +1,4 @@
-package com.kubernetes.api.model.apiextensions.v1;
-
+package com.kubernetes.api.model.apiextensions.v1beta1;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -9,7 +8,6 @@ import com.kubernetes.api.model.ListMeta;
 import com.kubernetes.api.model.annotation.Group;
 import com.kubernetes.api.model.annotation.PackageSuffix;
 import com.kubernetes.api.model.annotation.Version;
-
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -28,9 +26,9 @@ import java.util.Map;
 })
 @ToString
 @EqualsAndHashCode
-@Version("v1")
+@Version("v1beta1")
 @Group("apiextensions.k8s.io")
-@PackageSuffix(".apiextensions.v1")
+@PackageSuffix(".apiextensions.v1beta1")
 public class CustomResourceDefinitionList implements KubernetesResource, KubernetesResourceList<CustomResourceDefinition> {
 
     /**
@@ -39,9 +37,9 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
      *
      */
     @JsonProperty("apiVersion")
-    private String apiVersion = "apiextensions.k8s.io/v1";
+    private String apiVersion = "apiextensions.k8s.io/v1beta1";
     @JsonProperty("items")
-    private List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items = new ArrayList<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition>();
+    private List<com.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition> items = new ArrayList<com.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition>();
     /**
      *
      * (Required)
@@ -68,7 +66,7 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
      * @param kind
      * @param items
      */
-    public CustomResourceDefinitionList(String apiVersion, List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items, String kind, ListMeta metadata) {
+    public CustomResourceDefinitionList(String apiVersion, List<com.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition> items, String kind, ListMeta metadata) {
         super();
         this.apiVersion = apiVersion;
         this.items = items;
@@ -97,12 +95,12 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
     }
 
     @JsonProperty("items")
-    public List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> getItems() {
+    public List<com.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition> getItems() {
         return items;
     }
 
     @JsonProperty("items")
-    public void setItems(List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items) {
+    public void setItems(List<com.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition> items) {
         this.items = items;
     }
 

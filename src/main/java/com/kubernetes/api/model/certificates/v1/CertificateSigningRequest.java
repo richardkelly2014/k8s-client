@@ -1,22 +1,17 @@
-package com.kubernetes.api.model.apiextensions.v1;
-
+package com.kubernetes.api.model.certificates.v1;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kubernetes.api.model.KubernetesResource;
-import com.kubernetes.api.model.KubernetesResourceList;
-import com.kubernetes.api.model.ListMeta;
+import com.kubernetes.api.model.HasMetadata;
 import com.kubernetes.api.model.annotation.Group;
 import com.kubernetes.api.model.annotation.PackageSuffix;
 import com.kubernetes.api.model.annotation.Version;
-
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
 
 @JsonDeserialize(using = com.fasterxml.jackson.databind.JsonDeserializer.None.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,14 +19,15 @@ import java.util.Map;
         "apiVersion",
         "kind",
         "metadata",
-        "items"
+        "spec",
+        "status"
 })
 @ToString
 @EqualsAndHashCode
 @Version("v1")
-@Group("apiextensions.k8s.io")
-@PackageSuffix(".apiextensions.v1")
-public class CustomResourceDefinitionList implements KubernetesResource, KubernetesResourceList<CustomResourceDefinition> {
+@Group("certificates.k8s.io")
+@PackageSuffix(".certificates.v1")
+public class CertificateSigningRequest implements HasMetadata {
 
     /**
      *
@@ -39,18 +35,20 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
      *
      */
     @JsonProperty("apiVersion")
-    private String apiVersion = "apiextensions.k8s.io/v1";
-    @JsonProperty("items")
-    private List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items = new ArrayList<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition>();
+    private String apiVersion = "certificates.k8s.io/v1";
     /**
      *
      * (Required)
      *
      */
     @JsonProperty("kind")
-    private String kind = "CustomResourceDefinitionList";
+    private String kind = "CertificateSigningRequest";
     @JsonProperty("metadata")
-    private ListMeta metadata;
+    private com.kubernetes.api.model.ObjectMeta metadata;
+    @JsonProperty("spec")
+    private CertificateSigningRequestSpec spec;
+    @JsonProperty("status")
+    private CertificateSigningRequestStatus status;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -58,7 +56,7 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
      * No args constructor for use in serialization
      *
      */
-    public CustomResourceDefinitionList() {
+    public CertificateSigningRequest() {
     }
 
     /**
@@ -66,14 +64,16 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
      * @param metadata
      * @param apiVersion
      * @param kind
-     * @param items
+     * @param spec
+     * @param status
      */
-    public CustomResourceDefinitionList(String apiVersion, List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items, String kind, ListMeta metadata) {
+    public CertificateSigningRequest(String apiVersion, String kind, com.kubernetes.api.model.ObjectMeta metadata, CertificateSigningRequestSpec spec, CertificateSigningRequestStatus status) {
         super();
         this.apiVersion = apiVersion;
-        this.items = items;
         this.kind = kind;
         this.metadata = metadata;
+        this.spec = spec;
+        this.status = status;
     }
 
     /**
@@ -94,16 +94,6 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
     @JsonProperty("apiVersion")
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
-    }
-
-    @JsonProperty("items")
-    public List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> getItems() {
-        return items;
-    }
-
-    @JsonProperty("items")
-    public void setItems(List<com.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition> items) {
-        this.items = items;
     }
 
     /**
@@ -127,13 +117,33 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
     }
 
     @JsonProperty("metadata")
-    public ListMeta getMetadata() {
+    public com.kubernetes.api.model.ObjectMeta getMetadata() {
         return metadata;
     }
 
     @JsonProperty("metadata")
-    public void setMetadata(ListMeta metadata) {
+    public void setMetadata(com.kubernetes.api.model.ObjectMeta metadata) {
         this.metadata = metadata;
+    }
+
+    @JsonProperty("spec")
+    public CertificateSigningRequestSpec getSpec() {
+        return spec;
+    }
+
+    @JsonProperty("spec")
+    public void setSpec(CertificateSigningRequestSpec spec) {
+        this.spec = spec;
+    }
+
+    @JsonProperty("status")
+    public CertificateSigningRequestStatus getStatus() {
+        return status;
+    }
+
+    @JsonProperty("status")
+    public void setStatus(CertificateSigningRequestStatus status) {
+        this.status = status;
     }
 
     @JsonAnyGetter
@@ -145,6 +155,5 @@ public class CustomResourceDefinitionList implements KubernetesResource, Kuberne
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
 
 }

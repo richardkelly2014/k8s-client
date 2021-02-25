@@ -1,8 +1,6 @@
 package com.kubernetes.client.dsl;
 
 import com.kubernetes.client.Client;
-import com.kubernetes.client.V1ApiextensionAPIGroupDSL;
-import com.kubernetes.client.V1beta1ApiextensionAPIGroupDSL;
 
 /**
  * API entrypoint for apiextensions resources v1 / v1beta1
