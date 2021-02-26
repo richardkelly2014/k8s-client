@@ -1,5 +1,6 @@
 package com.kubernetes.client.util;
 
+import com.kubernetes.api.model.ListOptions;
 import com.kubernetes.client.Config;
 import com.kubernetes.client.KubernetesClientException;
 import com.kubernetes.client.internal.SSLUtils;
@@ -32,6 +33,7 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.ConnectionSpec;
 import okhttp3.Credentials;
 import okhttp3.Dispatcher;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -64,6 +66,43 @@ public class HttpClientUtils {
 
     public static OkHttpClient createHttpClientForMockServer(final Config config) {
         return createHttpClient(config, b -> b.protocols(Collections.singletonList(Protocol.HTTP_1_1)));
+    }
+
+    public static HttpUrl.Builder appendListOptionParams(HttpUrl.Builder urlBuilder, ListOptions listOptions) {
+        if (listOptions == null) {
+            return urlBuilder;
+        }
+        if (listOptions.getLimit() != null) {
+            urlBuilder.addQueryParameter("limit", listOptions.getLimit().toString());
+        }
+        if (listOptions.getContinue() != null) {
+            urlBuilder.addQueryParameter("continue", listOptions.getContinue());
+        }
+
+        if (listOptions.getResourceVersion() != null) {
+            urlBuilder.addQueryParameter("resourceVersion", listOptions.getResourceVersion());
+        }
+
+        if (listOptions.getFieldSelector() != null) {
+            urlBuilder.addQueryParameter("fieldSelector", listOptions.getFieldSelector());
+        }
+
+        if (listOptions.getLabelSelector() != null) {
+            urlBuilder.addQueryParameter("labelSelector", listOptions.getLabelSelector());
+        }
+
+        if (listOptions.getTimeoutSeconds() != null) {
+            urlBuilder.addQueryParameter("timeoutSeconds", listOptions.getTimeoutSeconds().toString());
+        }
+
+        if (listOptions.getAllowWatchBookmarks() != null) {
+            urlBuilder.addQueryParameter("allowWatchBookmarks", listOptions.getAllowWatchBookmarks().toString());
+        }
+
+        if (listOptions.getWatch() != null) {
+            urlBuilder.addQueryParameter("watch", listOptions.getWatch().toString());
+        }
+        return urlBuilder;
     }
 
     private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig) {
